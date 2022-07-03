@@ -1,0 +1,136 @@
+-- Gui to Lua
+-- Version: 3.2
+
+-- Instances:
+
+local ScreenGui = Instance.new("ScreenGui")
+local Frame = Instance.new("ImageLabel")
+local Frame_2 = Instance.new("ImageLabel")
+local PSX_Title = Instance.new("TextLabel")
+local TextLabel = Instance.new("TextLabel")
+local UserID = Instance.new("TextLabel")
+local Frame_3 = Instance.new("ImageLabel")
+local TextButton = Instance.new("TextButton")
+local UIS = game:GetService('UserInputService')
+local frame = Frame
+local dragToggle = nil
+local dragSpeed = 0.25
+local dragStart = nil
+local startPos = nil
+
+--Properties:
+
+ScreenGui.Parent = game.CoreGui
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+Frame.Name = "Frame"
+Frame.Parent = ScreenGui
+Frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Frame.BackgroundTransparency = 1.000
+Frame.Position = UDim2.new(0.123456791, 0, 0.400000006, 0)
+Frame.Size = UDim2.new(0, 296, 0, 140)
+Frame.Image = "rbxassetid://3570695787"
+Frame.ImageColor3 = Color3.fromRGB(63, 63, 63)
+Frame.ScaleType = Enum.ScaleType.Slice
+Frame.SliceCenter = Rect.new(100, 100, 100, 100)
+Frame.SliceScale = 0.120
+Frame.Draggable = true
+
+Frame_2.Name = "Frame"
+Frame_2.Parent = Frame
+Frame_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Frame_2.BackgroundTransparency = 1.000
+Frame_2.Size = UDim2.new(0, 296, 0, 41)
+Frame_2.Image = "rbxassetid://3570695787"
+Frame_2.ImageColor3 = Color3.fromRGB(45, 45, 45)
+Frame_2.ScaleType = Enum.ScaleType.Slice
+Frame_2.SliceCenter = Rect.new(100, 100, 100, 100)
+Frame_2.SliceScale = 0.120
+
+PSX_Title.Name = "PSX_Title"
+PSX_Title.Parent = Frame_2
+PSX_Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+PSX_Title.BackgroundTransparency = 1.000
+PSX_Title.BorderSizePixel = 0
+PSX_Title.Position = UDim2.new(0.064931713, 0, 0.121951222, 0)
+PSX_Title.Size = UDim2.new(0, 257, 0, 30)
+PSX_Title.Font = Enum.Font.SpecialElite
+PSX_Title.LineHeight = 0.810
+PSX_Title.Text = "PSX_Dupe_Working"
+PSX_Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+PSX_Title.TextSize = 25.000
+
+TextLabel.Parent = Frame
+TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel.BackgroundTransparency = 1.000
+TextLabel.Position = UDim2.new(0.0236486495, 0, 0.301098913, 0)
+TextLabel.Size = UDim2.new(0, 76, 0, 37)
+TextLabel.Font = Enum.Font.TitilliumWeb
+TextLabel.Text = "User :"
+TextLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
+TextLabel.TextSize = 42.000
+
+UserID.Name = "UserID"
+UserID.Parent = Frame
+UserID.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+UserID.BackgroundTransparency = 1.000
+UserID.Position = UDim2.new(0.280405402, 0, 0.352197826, 0)
+UserID.Size = UDim2.new(0, 201, 0, 29)
+UserID.Font = Enum.Font.Bangers
+UserID.LineHeight = 0.900
+UserID.Text = game.Players.LocalPlayer.Name
+UserID.TextColor3 = Color3.fromRGB(255, 255, 255)
+UserID.TextSize = 20.000
+
+Frame_3.Name = "Frame"
+Frame_3.Parent = Frame
+Frame_3.BackgroundColor3 = Color3.fromRGB(98, 98, 98)
+Frame_3.BackgroundTransparency = 1.000
+Frame_3.Position = UDim2.new(0.064931713, 0, 0.627472579, 0)
+Frame_3.Size = UDim2.new(0, 256, 0, 35)
+Frame_3.Image = "rbxassetid://3570695787"
+Frame_3.ScaleType = Enum.ScaleType.Slice
+Frame_3.SliceCenter = Rect.new(100, 100, 100, 100)
+Frame_3.SliceScale = 0.080
+
+TextButton.Parent = Frame_3
+TextButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+TextButton.BackgroundTransparency = 1.000
+TextButton.BorderSizePixel = 0
+TextButton.Size = UDim2.new(0, 256, 0, 33)
+TextButton.Font = Enum.Font.PermanentMarker
+TextButton.Text = "Dupe !"
+TextButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+TextButton.TextSize = 51.000
+TextButton.TextWrapped = true
+TextButton.MouseButton1Down:Connect(function()
+	loadstring(game:HttpGet('https://raw.githubusercontent.com/xDavid673x/David/main/Script-LUA', true))()
+end)
+
+local function updateInput(input)
+	local delta = input.Position - dragStart
+	local position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X,
+		startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+	game:GetService('TweenService'):Create(frame, TweenInfo.new(dragSpeed), {Position = position}):Play()
+end
+
+frame.InputBegan:Connect(function(input)
+	if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) then 
+		dragToggle = true
+		dragStart = input.Position
+		startPos = frame.Position
+		input.Changed:Connect(function()
+			if input.UserInputState == Enum.UserInputState.End then
+				dragToggle = false
+			end
+		end)
+	end
+end)
+
+UIS.InputChanged:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+		if dragToggle then
+			updateInput(input)
+		end
+	end
+end)
